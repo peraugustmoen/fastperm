@@ -1,0 +1,13 @@
+Package: Fastperm
+Type: Package
+Title: Fast permutation computation
+Version: 1.0
+Date: 15 march 2023
+Author: Dennis "Big Dick" Christensen, Per August Moen
+Maintainer: Per August Moen <pamoen@math.uio.no>
+Description: Jeg *har* møtt Ferguson, han er såkalt *gammel*
+License: GPL-3
+Encoding: UTF-8
+RoxygenNote: 7.1.2
+Imports: mclust, MASS, Rdpack
+RdMacros: Rdpack
