@@ -1,0 +1,30 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.4.7)  10 APR 2023 19:58
+entering extended mode
+ \write18 enabled.
+ %&-line parsing enabled.
+**/Users/peraugust/Library/CloudStorage/OneDrive-UniversitetetiOslo/Cworkshop/f
+astperm/src/methods.c
+
+(/Users/peraugust/Library/CloudStorage/OneDrive-UniversitetetiOslo/Cworkshop/fa
+stperm/src/methods.c
+LaTeX2e <2022-11-01> patch level 1
+L3 programming layer <2023-03-30>
+! You can't use `macro parameter character #' in vertical mode.
+l.1 #
+     include "header.h"
+? 
+! Emergency stop.
+l.1 
+    
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 20 strings out of 476017
+ 827 string characters out of 5789769
+ 1849666 words of memory out of 5000000
+ 20577 multiletter control sequences out of 15000+600000
+ 512287 words of font info for 32 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 13i,0n,12p,149b,10s stack positions out of 10000i,1000n,20000p,200000b,200000s
+!  ==> Fatal error occurred, no output PDF file produced!
