@@ -22,8 +22,11 @@ get_log_permanents= function(X, a, b,debug){
     #res = 1
     
   }else{
-    print("input is matrix:")
-    print(X)
+    if(debug){
+      print("input is matrix:")
+      print(X)
+    }
+    
     n = dim(X)[2]
     Tt = dim(X)[1]
     if(debug){

@@ -85,7 +85,10 @@ void get_alphabetagamma(double * x, int n, double * a, double * b, double * a_un
 
     for (int i = 0; i < len_a_union_b-1; ++i)
     {
-        Rprintf("a_union_b[%d] = %f\n", i, a_union_b[i]);
+        if(debug){
+            Rprintf("a_union_b[%d] = %f\n", i, a_union_b[i]);
+
+        }
         for (int j = 0; j < n; ++j)
         {
             if ( (a_union_b[i] <= x[j]) && (x[j]<= a_union_b[i+1]))
@@ -94,8 +97,10 @@ void get_alphabetagamma(double * x, int n, double * a, double * b, double * a_un
                 curr_x_ind = j;
             }
         }
+        if(debug){
+            Rprintf("alpha = %d\n", alpha[alpha_counter]);
 
-        Rprintf("alpha = %d\n", alpha[alpha_counter]);
+        }
         
 
 
@@ -132,7 +137,10 @@ void get_alphabetagamma(double * x, int n, double * a, double * b, double * a_un
             alpha_counter++;
 
         }
-        Rprintf("alphacounter = %d\n", alpha_counter);
+        if(debug){
+            Rprintf("alphacounter = %d\n", alpha_counter);
+
+        }
     }
 
     *k = alpha_counter;
@@ -167,7 +175,7 @@ void get_alphabetagamma(double * x, int n, double * a, double * b, double * a_un
     double * b = REAL(bSEXP);
     double * aunionb = REAL(aunionbSEXP);
 
-
+    int debug = 1;
 
     
     memset(alpha, 0, sizeof(int)*n);
@@ -205,31 +213,36 @@ void get_alphabetagamma(double * x, int n, double * a, double * b, double * a_un
     x[2] = 3.5;
     x[3] = 6.5;
 
-    Rprintf("x = ");
-    print_float_vector(n,  x);
-    Rprintf("a = ");
-    print_float_vector(n,  a);
-    Rprintf("b = ");
-    print_float_vector(n,  b);
-    Rprintf("a_union_b = ");
-    print_float_vector(len_a_union_b,  aunionb);
-    Rprintf("here is my *C code*\n");
+    if(debug){
+        Rprintf("x = ");
+        print_float_vector(n,  x);
+        Rprintf("a = ");
+        print_float_vector(n,  a);
+        Rprintf("b = ");
+        print_float_vector(n,  b);
+        Rprintf("a_union_b = ");
+        print_float_vector(len_a_union_b,  aunionb);
+        Rprintf("here is my *C code*\n");
+
+    }
 
     get_alphabetagamma(x,n, a, b, aunionb, len_a_union_b, alpha, 
     beta, gamma, k, m,1);
 
     
+    if(debug){
+        Rprintf("k = %d\n", *k);
 
-    Rprintf("k = %d\n", *k);
+        Rprintf("alpha = ");
+        print_int_vector(n,  alpha);
 
-    Rprintf("alpha = ");
-    print_int_vector(n,  alpha);
+        Rprintf("beta = ");
+        print_int_vector(n,  beta);
 
-    Rprintf("beta = ");
-    print_int_vector(n,  beta);
-
-    Rprintf("gamma = ");
-    print_int_vector(n,  gamma);
+        Rprintf("gamma = ");
+        print_int_vector(n,  gamma);
+        
+    }
 
 
     UNPROTECT(9);
@@ -237,5 +250,118 @@ void get_alphabetagamma(double * x, int n, double * a, double * b, double * a_un
 
 
     return(mSEXP);
+
+}
+
+
+
+ SEXP C_test_get_alphabetagamma_input(SEXP xSEXP,SEXP aSEXP, SEXP bSEXP, SEXP nSEXP, SEXP debugSEXP){
+
+
+    //int n = 4;
+
+
+    /*SEXP xSEXP = PROTECT(allocVector(REALSXP, n));
+    SEXP aSEXP = PROTECT(allocVector(REALSXP, n));
+    SEXP bSEXP = PROTECT(allocVector(REALSXP, n));*/
+
+    PROTECT(xSEXP);
+    PROTECT(aSEXP);
+    PROTECT(bSEXP);
+    PROTECT(nSEXP);
+    PROTECT(debugSEXP);
+    int n = *(INTEGER(nSEXP));
+    int debug = *(INTEGER(debugSEXP));
+
+    SEXP aunionbSEXP = PROTECT(allocVector(REALSXP, 2*n));
+    SEXP alphaSEXP = PROTECT(allocVector(INTSXP, n));
+    SEXP betaSEXP = PROTECT(allocVector(INTSXP, n));
+    SEXP gammaSEXP = PROTECT(allocVector(INTSXP, n));
+    SEXP mSEXP = PROTECT(allocVector(INTSXP, 1));
+    SEXP k_SEXP = PROTECT(allocVector(INTSXP, 1));
+
+    
+    int * alpha = INTEGER(alphaSEXP);
+    int * beta = INTEGER(betaSEXP);
+    int * gamma = INTEGER(gammaSEXP);
+    int * m = INTEGER(mSEXP);
+    int * k = INTEGER(k_SEXP);
+    double * x = REAL(xSEXP);
+    double * a = REAL(aSEXP);
+    double * b = REAL(bSEXP);
+    double * aunionb = REAL(aunionbSEXP);
+
+    
+
+    
+    memset(alpha, 0, sizeof(int)*n);
+    memset(beta, 0, sizeof(int)*n);
+    memset(gamma, 0, sizeof(int)*n);
+    memset(m, 0, sizeof(int));
+    memset(k, 0, sizeof(int));
+    memset(aunionb, 0, sizeof(double)*2*n);
+
+    int len_a_union_b = 0;
+    
+    
+    get_union(n, a, b, &len_a_union_b,  aunionb);
+
+    if(debug){
+        Rprintf("x = ");
+        print_float_vector(n,  x);
+        Rprintf("a = ");
+        print_float_vector(n,  a);
+        Rprintf("b = ");
+        print_float_vector(n,  b);
+        Rprintf("a_union_b = ");
+        print_float_vector(len_a_union_b,  aunionb);
+        Rprintf("here is my *C code*\n");
+
+    }
+    
+    get_alphabetagamma(x,n, a, b, aunionb, len_a_union_b, alpha, 
+    beta, gamma, k, m,debug);
+
+    
+    if(debug){
+        Rprintf("k = %d\n", *k);
+
+        Rprintf("alpha = ");
+        print_int_vector(n,  alpha);
+
+        Rprintf("beta = ");
+        print_int_vector(n,  beta);
+
+        Rprintf("gamma = ");
+        print_int_vector(n,  gamma);
+        
+    }
+
+
+    SEXP ret = PROTECT(allocVector(VECSXP, 5)); //the list to be returned in R
+    SET_VECTOR_ELT(ret, 0, alphaSEXP);
+    SET_VECTOR_ELT(ret, 1, betaSEXP);
+    SET_VECTOR_ELT(ret, 2, gammaSEXP);
+    SET_VECTOR_ELT(ret, 3, mSEXP);
+    SET_VECTOR_ELT(ret, 4, k_SEXP);
+    
+
+    // creating list of names/titles to be returned in the output list
+    SEXP names = PROTECT(allocVector(STRSXP, 5));
+    //SET_STRING_ELT(names, 0, mkChar("CUSUM"));
+    SET_STRING_ELT(names, 0, mkChar("alpha"));
+    SET_STRING_ELT(names, 1, mkChar("beta"));
+    SET_STRING_ELT(names, 2, mkChar("gamma"));
+    SET_STRING_ELT(names, 3, mkChar("m"));
+    SET_STRING_ELT(names, 4, mkChar("k"));
+    
+
+    setAttrib(ret, R_NamesSymbol, names);
+
+    UNPROTECT(13);
+
+
+
+    return(ret);
 
 }

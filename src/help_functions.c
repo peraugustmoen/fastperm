@@ -81,9 +81,11 @@ void update_dict(pair p, double value, dictionary * dict){
         //collcount++;
     }
 
+/*    
     if(collcount>10){
     	Rprintf("collcount = %d\n",collcount);
     }
+*/    
     if(index ==-1 || index >=(*dict).used_len){
     	//if(collcount>10){
 		//    Rprintf("[%d,%d]-> h = %ld : collcount = %d, table_size = %ld, used_len = %ld\n", p.x, p.y,h,collcount, (*dict).table_size, (*dict).used_len);

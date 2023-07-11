@@ -1,1 +1,2 @@
 #PKG_CFLAGS = -Wall - Wextra -Wpedantic -g
+#-fsanitize=address

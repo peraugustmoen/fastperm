@@ -557,8 +557,10 @@ char check_if_reduced(int * alpha, int * beta, int * gamma,
 }
 
 
-void reduction(int * alpha, int * beta, int * gamma, int *m, int n, int *k, int * history,
+int reduction(int * alpha, int * beta, int * gamma, int *m, int n, int *k, int * history,
 			   int * amount_history, int * history_len, int debug){
+
+	// returns 0 if success, otherwise -1
 
 	// legg inn kode i tilfelle history eller amounthistry == NULL
 	
@@ -589,11 +591,35 @@ void reduction(int * alpha, int * beta, int * gamma, int *m, int n, int *k, int 
 	while(1){
 		if(alpha[0]>n){
 			Rprintf("ERROR! alpha[0]>n\n");
-			break;
+			Rprintf("=====\n");
+			Rprintf("alpha:\n");
+			print_int_vector(n, alpha);
+			Rprintf("beta:\n");
+			print_int_vector(n, beta);
+			Rprintf("gamma:\n");
+			print_int_vector(n, gamma);
+			Rprintf("m:\n");
+			print_int_vector(1, m);
+			Rprintf("k:\n");
+			print_int_vector(1, k);
+			Rprintf("=====\n");
+			return -1;
 		}
 		if((*k)<0){
 			Rprintf("ERROR! k<0\n");
-			break;
+			Rprintf("=====\n");
+			Rprintf("alpha:\n");
+			print_int_vector(n, alpha);
+			Rprintf("beta:\n");
+			print_int_vector(n, beta);
+			Rprintf("gamma:\n");
+			print_int_vector(n, gamma);
+			Rprintf("m:\n");
+			print_int_vector(1, m);
+			Rprintf("k:\n");
+			print_int_vector(1, k);
+			Rprintf("=====\n");
+			return -1;
 		}
 		// if top trim possible
 		if((*m)>beta[0] && beta[0] > 0){
@@ -786,6 +812,7 @@ void reduction(int * alpha, int * beta, int * gamma, int *m, int n, int *k, int 
 		}
 		else{
 			Rprintf("ERROR!");
+			return -1;
 			break;
 		}		
 
@@ -797,6 +824,7 @@ void reduction(int * alpha, int * beta, int * gamma, int *m, int n, int *k, int 
 	//Rprintf("Terminated at iter %d\n", cc);
 	
 	*history_len = historycounter;
+	return 0;
 }
 
 double * reverse_reduction(double * old_log_subperms, double * new_log_subperms, int * alpha, 

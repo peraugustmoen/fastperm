@@ -45,12 +45,17 @@ void print_int_vector(int ,  int * );
 void print_float_vector(int ,  double * );
 
 SEXP C_get_log_permanents(SEXP , SEXP , SEXP , SEXP , SEXP,SEXP);
+double Clog_sum_exp(double * , int, double );
+double Csparse_log_sum_exp(dictionary *);
+SEXP C_wrapper_log_sum_exp(SEXP, SEXP );
+SEXP test();
 
 int nonzero_perm(double * , double * , double * , int );
 
 void get_union(int, double *, double * , int * , double *);
 
-
+SEXP C_test_get_alphabetagamma();
+SEXP C_test_get_alphabetagamma_input(SEXP,SEXP, SEXP , SEXP, SEXP );
 void update_dict(pair, double, dictionary *);
 void print_sparse_matrix(dictionary * );
 
@@ -133,7 +138,7 @@ void reverse_rm(double * , double * , int , int ,
 void get_reduced_log_subperms(double * , int *, int *, int * , 
 				double * , int, int *, int * );
 
-void reduction(int * , int *, int * , int *, int, int *, int *,
+int reduction(int * , int *, int * , int *, int, int *, int *,
 			   int * , int * , int);
 
 double * reverse_reduction(double * , double * , int * , 
@@ -144,6 +149,10 @@ double * reverse_reduction(double * , double * , int * ,
 void get_alphabetagamma(double * , int , double * , double * , double * , int , int *, 
     int *, int *, int * , int *, int );
 
+char check_if_reduced(int *, int *, int *, 
+					  int * , int * );
+
+SEXP C_test_sparse_functions_with_example();
 // #define MADCONST 1.4826
 // 
 // void internal_matmult(double *,

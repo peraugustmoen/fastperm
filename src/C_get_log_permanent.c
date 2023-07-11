@@ -83,11 +83,12 @@ SEXP C_get_log_permanents(SEXP XSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nSEXP, SEXP T
 	memset(history, 0, sizeof(int)*3*n);
 	memset(amount_history, 0, sizeof(int)*6*n);
 
+
 	for (int t = 0; t < T; ++t)
 	{
-		Rprintf("t = %d\n",t);
-		double * x = X + (t*n);
-
+		//Rprintf("t = %d\n",t);
+		//double * x = X + (t*n);
+		double * x = &(X[t*n]);
 		R_qsort(x, 1, n);
 
 		if(!nonzero_perm(x, a,  b, n)){
@@ -105,6 +106,7 @@ SEXP C_get_log_permanents(SEXP XSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nSEXP, SEXP T
 
 
 	    if(debug){
+	    	Rprintf("T=%d, t=%d\n", T, t);
 	    	Rprintf("len_a_union_b = %d\n", len_a_union_b);
 	    	Rprintf("x:\n");
 	    	print_float_vector(n,x);
@@ -133,14 +135,78 @@ SEXP C_get_log_permanents(SEXP XSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nSEXP, SEXP T
 		memset(amount_history, 0, sizeof(int)*6*n);
 
 
-		Rprintf("REDUCING NOW\n");
+		if(debug){
+			Rprintf("REDUCING NOW\n");
+		}
+		
 		//return(XSEXP);
-		reduction(alpha,  beta,  gamma, m, n, k, history,
+		int result = reduction(alpha,  beta,  gamma, m, n, k, history,
 				   amount_history, &history_len, debug);
 
-		Rprintf("history len = %d\n", history_len);
+		if(result != 0){
 
-		Rprintf("REDUCED SUBPERMS\n");
+			Rprintf("Error recorded, rerunning and returning NULL");
+
+			memset(alpha, 0, sizeof(int)*n);
+			memset(beta, 0, sizeof(int)*n);
+			memset(gamma, 0, sizeof(int)*n);
+			memset(m, 0, sizeof(int));
+			memset(k, 0, sizeof(int));
+			debug = 1;
+			get_alphabetagamma(x, n, a, b, a_union_b, len_a_union_b, alpha, 
+		    beta, gamma,  k, m, debug);
+
+
+		    if(debug){
+		    	Rprintf("len_a_union_b = %d\n", len_a_union_b);
+		    	Rprintf("x:\n");
+		    	print_float_vector(n,x);
+		    	Rprintf("a:\n");
+		    	print_float_vector(n,a);
+		    	Rprintf("b:\n");
+		    	print_float_vector(n,b);
+		    	Rprintf("a_union_b:\n");
+		    	print_float_vector(2*n,a_union_b);
+		    	Rprintf("len a_union_b:%d\n", len_a_union_b);
+		    	Rprintf("alpha:\n");
+		    	print_int_vector(n,  alpha);
+		    	Rprintf("beta:\n");
+		    	print_int_vector(n,  beta);
+		    	Rprintf("gamma:\n");
+		    	print_int_vector(n,  gamma);
+		    	Rprintf("m:%d\n", *m);
+		    	Rprintf("k:%d\n", *k);
+		    	
+		    }
+
+			int history_len = 0;
+
+		
+			memset(history, 0, sizeof(int)*3*n);
+			memset(amount_history, 0, sizeof(int)*6*n);
+
+
+			if(debug){
+				Rprintf("REDUCING NOW\n");
+			}
+			
+			//return(XSEXP);
+			int result = reduction(alpha,  beta,  gamma, m, n, k, history,
+					   amount_history, &history_len, debug);
+
+
+			free_dictionary(new_log_subperms);
+			free_dictionary(old_log_subperms);
+
+			UNPROTECT(16);
+			return NULL;
+		}
+
+		if(debug){
+			Rprintf("history len = %d\n", history_len);
+
+			Rprintf("REDUCED SUBPERMS\n");
+		}
 		sparse_get_reduced_log_subperms( new_log_subperms,  alpha, beta, gamma,
 						log_factorials, n,  m, k);
 		//Rprintf("RESULT:\n");
@@ -152,8 +218,9 @@ SEXP C_get_log_permanents(SEXP XSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nSEXP, SEXP T
 
 
 
-
-		Rprintf("==========\nReverse reduction:\n==========\n");
+		if(debug){
+			Rprintf("==========\nReverse reduction:\n==========\n");
+		}
 		//Rprintf("old = %d\n", old_log_subperms);
 		//Rprintf("new = %d\n", new_log_subperms);
 		dictionary * the_log_subperms = sparse_reverse_reduction(old_log_subperms, new_log_subperms, alpha,
@@ -166,7 +233,10 @@ SEXP C_get_log_permanents(SEXP XSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nSEXP, SEXP T
 		
 		double logperm =  Csparse_log_sum_exp(the_log_subperms);
 		logperms[t] = logperm;
-		Rprintf("logperm = %f\n", logperm);
+		if(debug){
+			Rprintf("logperm = %f\n", logperm);
+
+		}
 
 
 
