@@ -1,4 +1,4 @@
-Package: Fastperm
+Package: fastperm
 Type: Package
 Title: Fast permutation computation
 Version: 1.0

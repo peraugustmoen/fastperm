@@ -91,6 +91,7 @@ SEXP C_get_log_permanents(SEXP XSEXP, SEXP aSEXP, SEXP bSEXP, SEXP nSEXP, SEXP T
 		double * x = &(X[t*n]);
 		R_qsort(x, 1, n);
 
+		//Rprintf("x[0] = %f, x[1] = %f, x[n] = %f\n", x[0], x[1], x[n-1]);
 		if(!nonzero_perm(x, a,  b, n)){
 			logperms[t] = -1;
 			continue;
